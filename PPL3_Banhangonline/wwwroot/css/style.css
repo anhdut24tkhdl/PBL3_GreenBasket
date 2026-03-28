@@ -1,0 +1,119 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+}
+
+.header {
+    width: 1300px;
+    background: #2ca43d;
+    padding: 18px 30px;
+}
+
+.my-container {
+    width: 100%;
+    max-width: 1500px; /* tăng rộng hơn */
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 14px;
+}
+
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .auth-links a,
+    .auth-links span {
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+.main-header {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.logo-box {
+    width: 64px;
+    height: 64px;
+    border: 3px solid white;
+    border-radius: 12px;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+    .logo-box::before {
+        content: "";
+        position: absolute;
+        top: -18px;
+        width: 20px;
+        height: 16px;
+        border: 3px solid white;
+        border-bottom: none;
+        border-radius: 12px 12px 0 0;
+    }
+
+.logo-text {
+    color: white;
+    font-size: 38px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.search-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    min-width: 0;
+}
+
+    .search-area input {
+        flex: 1;
+        min-width: 0;
+        height: 60px;
+        border: none;
+        outline: none;
+        padding: 0 20px;
+        font-size: 18px;
+        border-radius: 4px 0 0 4px;
+    }
+
+    .search-area button {
+        width: 110px;
+        height: 60px;
+        border: none;
+        background: #1f8d31;
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 0 4px 4px 0;
+    }

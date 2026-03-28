@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Service\" />
+    <Folder Include="Views\User\" />
   </ItemGroup>
 
   <ItemGroup>

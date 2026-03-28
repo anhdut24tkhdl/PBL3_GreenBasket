@@ -1,20 +1,25 @@
 ﻿@model List<PPL3_Banhangonline.Models.Category>
 
-<h2>DANH MỤC</h2>
+<h2>Quản lý danh mục</h2>
 
-@if (Model != null && Model.Any())
-{
-    foreach (var item in Model)
+<a asp-action="Create">Thêm danh mục</a>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>ID</th>
+        <th>Tên danh mục</th>
+        <th>Chức năng</th>
+    </tr>
+
+    @foreach (var item in Model)
     {
-        <div style="border:1px solid red; margin:10px; padding:10px;">
-            <p>ID: @item.CategoryID</p>
-            <p>Tên: @item.CategoryName</p>
-            <p>Ảnh: @item.Image</p>
-            <img src="https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2024/1/13/rau-cai-cay-1705113818591127379333.jpg" />
-        </div>
+        <tr>
+            <td>@item.CategoryID</td>
+            <td>@item.CategoryName</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CategoryID">Sửa</a>
+                <a asp-action="Delete" asp-route-id="@item.CategoryID">Xóa</a>
+            </td>
+        </tr>
     }
-}
-else
-{
-    <p>Model đang null hoặc không có dữ liệu</p>
-}
+</table>

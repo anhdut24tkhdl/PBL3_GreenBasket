@@ -1,0 +1,11 @@
+﻿@model PPL3_Banhangonline.Models.Category
+
+<h2>Thêm danh mục</h2>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label>Tên danh mục</label>
+        <input asp-for="CategoryName" />
+    </div>
+    <button type="submit">Lưu</button>
+</form>

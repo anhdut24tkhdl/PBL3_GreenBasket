@@ -1,29 +1,37 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>@ViewData["Title"] - GreenBasket</title>
-    <link rel="stylesheet" href="~/css/site.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenBasket</title>
+    <link rel="stylesheet" href="~/css/style.css">
 </head>
 <body>
-    <header>
-        <div class="top-bar">
-            <div class="logo">
-                <a asp-controller="Home" asp-action="Index">GreenBasket</a>
+    <header class="header">
+        <div class="my-container">
+            <div class="topbar">
+                <div class="auth-links">
+                    <a asp-controller="Account" asp-action="register">Đăng Ký</a>
+                    <span>|</span>
+                    <a asp-controller="Account" asp-action="Login" >Đăng Nhập</a>
+                </div>
             </div>
 
-            <div class="account">
-                <a asp-controller="Account" asp-action="Login">Đăng nhập</a>
-                <a asp-controller="Account" asp-action="Register">Đăng ký</a>
+            <div class="main-header">
+                <div class="logo">
+                    <div class="logo-box">G</div>
+                    <div class="logo-text">GreenBasket</div>
+                </div>
+
+                <div class="search-area">
+                    <input type="text" placeholder="Tìm kiếm sản phẩm..." />
+                    <button>Tìm</button>
+                </div>
             </div>
         </div>
     </header>
+    <div>
 
-    <main>
-   
-    </main>
-
-    <footer>
-        <p>&copy; 2026 - Shop Online</p>
-    </footer>
+    </div>
 </body>
 </html>
