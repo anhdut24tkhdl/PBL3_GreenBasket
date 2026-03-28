@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Trang người bán";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/seller.css" />
+
+<div class="shop-page">
+    <div class="shop-header">
+        <h1>Trang quản lý người bán</h1>
+
+        <h2 style="color:#2e7d32;">
+            Shop: @ViewBag.Shopname
+        </h2>
+
+        <p>Chọn chức năng bạn muốn sử dụng</p>
+    </div>
+
+    <div class="shop-function-list">
+        <a asp-controller="Product" asp-action="Index" class="shop-card">
+            <div class="shop-card-icon">📦</div>
+            <h2>Quản lí sản phẩm</h2>
+            <p>Thêm, sửa, xóa và cập nhật thông tin sản phẩm.</p>
+        </a>
+
+        <a asp-controller="Shop" asp-action="OrderManagement" class="shop-card">
+            <div class="shop-card-icon">🧾</div>
+            <h2>Quản lí đơn hàng</h2>
+            <p>Theo dõi đơn hàng, cập nhật trạng thái và xử lí đơn.</p>
+        </a>
+
+        <a asp-controller="Shop" asp-action="RevenueStatistics" class="shop-card">
+            <div class="shop-card-icon">📊</div>
+            <h2>Xem thống kê doanh thu</h2>
+            <p>Xem doanh thu, số đơn hàng và tình hình kinh doanh.</p>
+        </a>
+    </div>
+</div>

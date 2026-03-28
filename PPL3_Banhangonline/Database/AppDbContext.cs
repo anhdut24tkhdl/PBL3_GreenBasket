@@ -54,5 +54,10 @@ namespace PPL3_Banhangonline.Database
         public DbSet<Product> Products { get; set; }
         public DbSet<Price> Prices { get; set; }
         public DbSet<Account> Account { get; internal set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Seller> Sellers { get; set; }
+        public DbSet<Shop> Shops { get; set; }
+
+        public object Accounts { get; internal set; }
     }
 }

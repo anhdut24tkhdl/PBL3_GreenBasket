@@ -1,8 +1,11 @@
-﻿namespace PPL3_Banhangonline.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace PPL3_Banhangonline.Models
 {
     public class Customer
     {
         public int CustomerID { get; set; }
+        [ForeignKey("Account")]
         public int UserID { get; set; }
         public string? Name { get; set; }
         public string? Phone { get; set; }

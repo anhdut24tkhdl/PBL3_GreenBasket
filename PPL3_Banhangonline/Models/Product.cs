@@ -1,4 +1,6 @@
-﻿namespace PPL3_Banhangonline.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace PPL3_Banhangonline.Models
 {
     public class Product
     {
@@ -9,7 +11,7 @@
         public string? Description { get; set; }
         public int? Stock { get; set; }
         public string? Image { get; set; }
-
+        [ForeignKey("ShopID")]
         public Shop? Shop { get; set; }
         public Category? Category { get; set; }
         public Price? Price { get; set; }

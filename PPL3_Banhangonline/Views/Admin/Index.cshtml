@@ -1,9 +1,89 @@
-﻿<h2>Trang quản trị</h2>
+﻿@{
+    ViewData["Title"] = "Trang quản trị";
+}
+@{
+    ViewData["Title"] = "Trang chủ";
+    var username = Context.Session.GetString("Username");
+    var role = Context.Session.GetString("Role");
+}
 
-<div>
-    <a asp-controller="Categories" asp-action="Index">Quản lý danh mục</a>
-</div>
+@if (role != "admin")
+{
+    <h1> không phận sự </h1>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="admin-panel shadow-lg p-4 rounded">
+            <h2 class="text-center mb-4 text-primary fw-bold">Trang quản trị</h2>
+            <p class="text-center text-muted mb-4">Chọn chức năng bạn muốn quản lý</p>
 
-<div>
-    <a asp-controller="Users" asp-action="Index">Quản lý người dùng</a>
-</div>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card admin-card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="icon mb-3">📂</div>
+                            <h4 class="card-title">Quản lý danh mục</h4>
+                            <p class="card-text text-muted">
+                                Thêm, sửa, xóa và xem danh sách các danh mục sản phẩm.
+                            </p>
+                            <a asp-controller="Categories" asp-action="Index" class="btn btn-primary px-4">
+                                Vào quản lý
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card admin-card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="icon mb-3">👤</div>
+                            <h4 class="card-title">Quản lý người dùng</h4>
+                            <p class="card-text text-muted">
+                                Xem danh sách tài khoản, phân quyền và quản lý thông tin người dùng.
+                            </p>
+                            <a asp-controller="Users" asp-action="Index" class="btn btn-success px-4">
+                                Vào quản lý
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        body {
+        background: linear-gradient(135deg, #eef2f7, #d9e4f5);
+        }
+
+        .admin-panel {
+        background: white;
+        max-width: 900px;
+        margin: auto;
+        }
+
+        .admin-card {
+        border-radius: 20px;
+        transition: 0.3s ease;
+        }
+
+        .admin-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+        }
+
+        .icon {
+        font-size: 50px;
+        }
+
+        .card-title {
+        font-weight: 700;
+        color: #333;
+        }
+
+        .btn {
+        border-radius: 30px;
+        }
+    </style>
+}

@@ -1,0 +1,22 @@
+﻿.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+    .product-table th, .product-table td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .product-table th {
+        background: #f4f4f4;
+    }
+
+.btn-add {
+    background: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    text-decoration: none;
+}

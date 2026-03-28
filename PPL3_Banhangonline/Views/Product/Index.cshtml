@@ -1,0 +1,44 @@
+﻿@model List<PPL3_Banhangonline.Models.Product>
+
+@{
+    ViewData["Title"] = "Quản lí sản phẩm";
+}
+
+<link rel="stylesheet" href="~/css/product.css" />
+
+<h2>Quản lí sản phẩm - @ViewBag.ShopName</h2>
+
+<a asp-action="Create" class="btn-add">+ Thêm sản phẩm</a>
+
+@if (Model != null && Model.Count > 0)
+{
+    <table class="product-table">
+        <tr>
+            <th>Ảnh</th>
+            <th>Tên</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Chức năng</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="@item.Image" width="80" />
+                </td>
+                <td>@item.ProductName</td>
+                <td>@item.Price</td>
+                <td>@item.Stock</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ProductID">Sửa</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ProductID">Xóa</a>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>Shop này chưa có sản phẩm nào.</p>
+}

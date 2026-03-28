@@ -6,7 +6,7 @@
 
 <table border="1" cellpadding="10">
     <tr>
-        <th>ID</th>
+        
         <th>Tên danh mục</th>
         <th>Chức năng</th>
     </tr>
@@ -14,7 +14,7 @@
     @foreach (var item in Model)
     {
         <tr>
-            <td>@item.CategoryID</td>
+       
             <td>@item.CategoryName</td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CategoryID">Sửa</a>

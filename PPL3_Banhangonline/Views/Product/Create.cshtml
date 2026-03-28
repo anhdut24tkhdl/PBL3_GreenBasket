@@ -1,0 +1,39 @@
+﻿@model PPL3_Banhangonline.Models.Product
+
+<h2>Thêm sản phẩm</h2>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label>Tên sản phẩm</label>
+        <input asp-for="ProductName" />
+    </div>
+
+    <div>
+        <label>Mô tả</label>
+        <input asp-for="Description" />
+    </div>
+
+    <div>
+        <label>Giá</label>
+        <input asp-for="Price" />
+    </div>
+
+    <div>
+        <label>Số lượng</label>
+        <input asp-for="Stock" />
+    </div>
+
+    <div>
+        <label>Ảnh</label>
+        <input asp-for="Image" />
+    </div>
+
+    <div>
+        <label>Danh mục</label>
+        <select asp-for="CategoryID" asp-items="ViewBag.Categories">
+            <option value="">-- Chọn danh mục --</option>
+        </select>
+    </div>
+
+    <button type="submit">Lưu</button>
+</form>

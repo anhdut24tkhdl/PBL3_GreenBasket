@@ -1,19 +1,104 @@
-﻿<!DOCTYPE html>
+﻿@model List<PPL3_Banhangonline.Models.Category>
+@using Microsoft.AspNetCore.Http
+
+@{
+    ViewData["Title"] = "Trang chủ";
+    var username = Context.Session.GetString("Username");
+    var role = Context.Session.GetString("Role");
+}
+
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GreenBasket</title>
     <link rel="stylesheet" href="~/css/style.css">
+    <style>
+        .category-section {
+            margin-top: 30px;
+            padding: 20px 0;
+        }
+
+        .category-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2e7d32;
+        }
+
+        .category-list {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .category-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            overflow: hidden;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: 0.3s;
+        }
+
+            .category-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .category-card img {
+                width: 100%;
+                height: 180px;
+                object-fit: cover;
+            }
+
+            .category-card h3 {
+                padding: 15px 10px;
+                font-size: 20px;
+                color: #333;
+            }
+
+        .my-container {
+            width: 90%;
+            margin: auto;
+        }
+    </style>
 </head>
 <body>
     <header class="header">
         <div class="my-container">
             <div class="topbar">
                 <div class="auth-links">
-                    <a asp-controller="Account" asp-action="register">Đăng Ký</a>
-                    <span>|</span>
-                    <a asp-controller="Account" asp-action="Login" >Đăng Nhập</a>
+                    @if (string.IsNullOrEmpty(username))
+                    {
+                        <a asp-controller="Account" asp-action="Register">Đăng Ký</a>
+                        <span>|</span>
+                        <a asp-controller="Account" asp-action="Login">Đăng Nhập</a>
+                    }
+                    else
+                    {
+                        <span>Xin chào, @username</span>
+
+                        @if (role == "admin")
+                        {
+                            <span>|</span>
+                            <a asp-controller="Admin" asp-action="Index">Quản trị</a>
+                        }
+                        @if (role == "seller")
+                        {
+                            <span>|</span>
+                            <a asp-controller="Seller" asp-action="Index">Cửa Hàng</a>
+                        }
+                        @if (role == "Customer")
+                        {
+                            <span>|</span>
+                            <a asp-controller="Customer" asp-action="Index">Giỏ Hàng</a>
+                        }
+
+                        <span>|</span>
+                        <a asp-controller="Account" asp-action="Logout">Đăng xuất</a>
+                    }
                 </div>
             </div>
 
@@ -30,8 +115,21 @@
             </div>
         </div>
     </header>
-    <div>
 
-    </div>
+    <main class="my-container">
+        <section class="category-section">
+            <h2 class="category-title">Danh mục sản phẩm</h2>
+
+            <div class="category-list">
+                @foreach (var item in Model)
+                {
+                    <a asp-controller="Product" asp-action="ByCategory" asp-route-id="@item.CategoryID" class="category-card">
+                        <img src="@item.Image" alt="@item.CategoryName" />
+                        <h3>@item.CategoryName</h3>
+                    </a>
+                }
+            </div>
+        </section>
+    </main>
 </body>
 </html>
