@@ -24,14 +24,22 @@ namespace PPL3_Banhangonline.Controllers
         {
 
             var user = _context.Account.FirstOrDefault(x =>
-     x.Username == model.Username && x.Password == model.Password);
+     x.AccountName == model.AccountName && x.Password == model.Password);
 
             if (user == null)
             {
                 ViewBag.Error = "Sai tài khoản hoặc mật khẩu";
                 return View(model);
             }
+            HttpContext.Session.SetInt32("UserId", user.AccountId);
+            HttpContext.Session.SetString("Username", user.AccountName);
+            HttpContext.Session.SetString("Role", user.Role);
 
+            return RedirectToAction("Index", "Home");
+        }
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
     }

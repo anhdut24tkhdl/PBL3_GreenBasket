@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Service\" />
-    <Folder Include="wwwroot\images\" />
+    <Folder Include="Views\User\" />
   </ItemGroup>
 
   <ItemGroup>
