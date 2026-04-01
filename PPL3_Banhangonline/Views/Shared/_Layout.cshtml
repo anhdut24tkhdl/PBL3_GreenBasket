@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PPL3_Banhangonline</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PPL3_Banhangonline.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+    </footer>
+
+    <!-- Chat Box -->
+    <div id="chat-box" style="position:fixed; bottom:20px; right:20px; width:320px; font-family:sans-serif; z-index:9999;">
+        <div id="chat-toggle" style="background:#2e7d32; color:white; padding:10px; border-radius:10px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.2);">
+            💬 Chat hỗ trợ
+        </div>
+
+        <div id="chat-content" style="display:none; background:white; border:1px solid #ccc; border-radius:10px; margin-top:10px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+            <div style="padding:10px; background:#2e7d32; color:white;">
+                Chat AI
+            </div>
+
+            <div id="chat-messages" style="height:250px; overflow-y:auto; padding:10px; background:#f9f9f9;">
+            </div>
+
+            <div style="display:flex; border-top:1px solid #ddd;">
+                <input id="chat-input" type="text" placeholder="Nhập tin..."
+                       style="flex:1; padding:8px; border:none; outline:none;" />
+                <button type="button" onclick="sendMessage()" style="padding:8px 12px; border:none; background:#2e7d32; color:white;">
+                    Gửi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        const toggle = document.getElementById("chat-toggle");
+        const content = document.getElementById("chat-content");
+        const input = document.getElementById("chat-input");
+        const messages = document.getElementById("chat-messages");
+
+        toggle.onclick = () => {
+            content.style.display = content.style.display === "none" ? "block" : "none";
+        };
+
+        input.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
+        });
+
+        async function sendMessage() {
+            const text = input.value.trim();
+            if (!text) return;
+
+            messages.innerHTML += `<div style="text-align:right; margin:6px 0;"><span style="display:inline-block; background:#d1e7dd; padding:8px 12px; border-radius:10px; max-width:80%;">${text}</span></div>`;
+            messages.innerHTML += `<div id="typing" style="text-align:left; margin:6px 0;"><span style="display:inline-block; background:#eeeeee; padding:8px 12px; border-radius:10px;">Đang trả lời...</span></div>`;
+            messages.scrollTop = messages.scrollHeight;
+
+            input.value = "";
+
+            try {
+                const res = await fetch("/Chat/Ask", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: `message=${encodeURIComponent(text)}`
+                });
+
+                const data = await res.json();
+
+                const typing = document.getElementById("typing");
+                if (typing) typing.remove();
+
+                messages.innerHTML += `<div style="text-align:left; margin:6px 0;"><span style="display:inline-block; background:#f1f1f1; padding:8px 12px; border-radius:10px; max-width:80%;">${data.reply}</span></div>`;
+                messages.scrollTop = messages.scrollHeight;
+            }
+            catch {
+                const typing = document.getElementById("typing");
+                if (typing) typing.remove();
+
+                messages.innerHTML += `<div style="text-align:left; margin:6px 0;"><span style="display:inline-block; background:#f8d7da; padding:8px 12px; border-radius:10px; max-width:80%;">Có lỗi khi gửi tin nhắn.</span></div>`;
+                messages.scrollTop = messages.scrollHeight;
+            }
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,127 @@
+﻿body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    color: #333;
+}
+
+.user-page {
+    width: 92%;
+    max-width: 1200px;
+    margin: 35px auto;
+}
+
+.page-header {
+    margin-bottom: 24px;
+}
+
+    .page-header h2 {
+        margin: 0;
+        font-size: 30px;
+        font-weight: 700;
+        color: #1f2937;
+        position: relative;
+        padding-left: 14px;
+    }
+
+        .page-header h2::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 4px;
+            width: 5px;
+            height: 32px;
+            border-radius: 6px;
+            background: linear-gradient(180deg, #2e7d32, #66bb6a);
+        }
+
+.table-box {
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e5e7eb;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .user-table thead {
+        background: linear-gradient(135deg, #2e7d32, #43a047);
+    }
+
+        .user-table thead th {
+            color: white;
+            text-align: left;
+            padding: 16px 18px;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+    .user-table tbody tr {
+        transition: 0.2s ease;
+        border-bottom: 1px solid #edf0f4;
+    }
+
+        .user-table tbody tr:nth-child(even) {
+            background: #fafbfd;
+        }
+
+        .user-table tbody tr:hover {
+            background: #f1f8f3;
+        }
+
+    .user-table tbody td {
+        padding: 16px 18px;
+        font-size: 15px;
+        vertical-align: middle;
+    }
+
+        .user-table tbody td:first-child {
+            font-weight: 600;
+            color: #374151;
+        }
+
+.btn-edit {
+    display: inline-block;
+    padding: 9px 16px;
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 10px rgba(25, 118, 210, 0.2);
+}
+
+    .btn-edit:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #1565c0, #1e88e5);
+        box-shadow: 0 8px 18px rgba(25, 118, 210, 0.28);
+    }
+
+    .btn-edit:active {
+        transform: scale(0.97);
+    }
+
+@media (max-width: 768px) {
+    .user-page {
+        width: 96%;
+    }
+
+    .page-header h2 {
+        font-size: 24px;
+    }
+
+    .table-box {
+        overflow-x: auto;
+    }
+
+    .user-table {
+        min-width: 650px;
+    }
+}

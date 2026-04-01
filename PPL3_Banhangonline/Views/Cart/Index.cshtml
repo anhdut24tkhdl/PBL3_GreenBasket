@@ -1,0 +1,64 @@
+﻿@model PPL3_Banhangonline.ViewModels.CartViewModel
+
+@{
+    ViewData["Title"] = "Giỏ hàng";
+}
+
+<h2>Giỏ hàng</h2>
+
+@if (TempData["Message"] != null)
+{
+    <p style="color:red;">@TempData["Message"]</p>
+}
+
+@if (Model.Items == null || !Model.Items.Any())
+{
+    <div style="padding:20px; border:1px solid #ddd; border-radius:10px; background:#fafafa;">
+        <p>Giỏ hàng không có sản phẩm.</p>
+    </div>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Đơn giá</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+                <th>Xóa</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        <img src="@item.Image" width="80" />
+                    </td>
+                    <td>@item.ProductName</td>
+                    <td>@item.UnitPrice.ToString("N0") đ</td>
+                    <td>
+                        <form asp-action="UpdateQuantity" method="post" style="display:flex; gap:6px;">
+                            <input type="hidden" name="cartItemId" value="@item.CartItemID" />
+                            <input type="number" name="quantity" value="@item.Quantity" min="1" style="width:70px;" />
+                            <button type="submit" class="btn btn-warning btn-sm">Cập nhật</button>
+                        </form>
+                    </td>
+                    <td>@item.TotalPrice.ToString("N0") đ</td>
+                    <td>
+                        <a asp-action="Remove" asp-route-cartItemId="@item.CartItemID" class="btn btn-danger btn-sm">
+                            Xóa
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div style="text-align:right; margin-top:20px;">
+        <h4>Tổng tiền: <span style="color:green;">@Model.GrandTotal.ToString("N0") đ</span></h4>
+        <a asp-action="Checkout" class="btn btn-success">Thanh toán</a>
+    </div>
+}

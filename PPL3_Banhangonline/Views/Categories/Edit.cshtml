@@ -1,0 +1,38 @@
+﻿@model PPL3_Banhangonline.Models.Category
+
+@{
+    ViewData["Title"] = "Sửa danh mục";
+}
+
+<div class="category-form-page">
+    <div class="category-form-box">
+        <h2>Sửa danh mục</h2>
+
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="CategoryID" />
+
+            <div class="form-group">
+                <label>Tên danh mục</label>
+                <input asp-for="CategoryName" class="form-control" placeholder="Nhập tên danh mục" />
+            </div>
+
+            <div class="form-group">
+                <label>Địa chỉ ảnh</label>
+                <input asp-for="Image" class="form-control" placeholder="Nhập link ảnh" />
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Image))
+            {
+                <div class="preview-box">
+                    <p>Ảnh hiện tại:</p>
+                    <img src="@Model.Image" alt="Ảnh danh mục" class="preview-image" />
+                </div>
+            }
+
+            <div class="button-group">
+                <button type="submit" class="btn-save">Lưu thay đổi</button>
+                <a asp-action="Index" class="btn-back">Quay lại</a>
+            </div>
+        </form>
+    </div>
+</div>

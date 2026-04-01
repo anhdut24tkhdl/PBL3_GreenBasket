@@ -1,0 +1,140 @@
+﻿@model List<PPL3_Banhangonline.Models.Category>
+@using Microsoft.AspNetCore.Http
+
+@{
+    ViewData["Title"] = "Trang chủ";
+    var username = Context.Session.GetString("Username");
+    var role = Context.Session.GetString("Role");
+}
+
+<link rel="stylesheet" href="~/css/style.css" />
+
+<div class="home-page">
+
+    <header class="home-header">
+        <div class="my-container">
+            <div class="topbar">
+                <div class="auth-links">
+                    @if (string.IsNullOrEmpty(username))
+                    {
+                        <a asp-controller="Account" asp-action="Register">Đăng ký</a>
+                        <span>|</span>
+                        <a asp-controller="Account" asp-action="Login">Đăng nhập</a>
+                    }
+                    else
+                    {
+                        <span>Xin chào, <strong>@username</strong></span>
+
+                        @if (role == "admin")
+                        {
+                            <span>|</span>
+                            <a asp-controller="Admin" asp-action="Index">Quản trị</a>
+                        }
+                        @if (role == "seller")
+                        {
+                            <span>|</span>
+                            <a asp-controller="Seller" asp-action="Index">Cửa hàng</a>
+                        }
+                        @if (role == "customer")
+                        {
+                            <span>|</span>
+                            <a asp-controller="Cart" asp-action="Index">Giỏ hàng</a>
+                        }
+
+                        <span>|</span>
+                        <a asp-controller="Account" asp-action="Logout">Đăng xuất</a>
+                    }
+                </div>
+            </div>
+
+            <div class="main-header">
+                <a asp-controller="Home" asp-action="Index" class="logo">
+                    <div class="logo-box">G</div>
+                    <div class="logo-text">
+                        <h2>GreenBasket</h2>
+                        <span>Nông sản tươi mỗi ngày</span>
+                    </div>
+                </a>
+
+                <div class="search-area">
+                    <input type="text" placeholder="Tìm kiếm sản phẩm..." />
+                    <button type="button">Tìm</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="my-container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <span class="hero-badge">Sàn nông sản trực tuyến</span>
+                    <h1>Mua nông sản tươi sạch, nhanh chóng và tiện lợi</h1>
+                    <p>
+                        Khám phá các danh mục sản phẩm nổi bật, kết nối người mua với cửa hàng
+                        và hỗ trợ tiêu thụ nông sản hiệu quả.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#category-section" class="btn-main">Xem danh mục</a>
+                        <a href="#rescue-section" class="btn-outline">Xem sản phẩm cần giải cứu</a>
+                    </div>
+                </div>
+
+                <div class="hero-image">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2153/2153788.png" alt="Nông sản" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="my-container">
+        <section class="category-section" id="category-section">
+            <div class="section-head">
+                <div>
+                    <p class="section-subtitle">Danh mục nổi bật</p>
+                    <h2 class="category-title">Danh mục sản phẩm</h2>
+                </div>
+            </div>
+
+            <div class="category-list">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <a asp-controller="Product"
+                           asp-action="ByCategory"
+                           asp-route-id="@item.CategoryID"
+                           class="category-card">
+                            <div class="category-img-wrap">
+                                <img src="@item.Image" alt="@item.CategoryName" />
+                            </div>
+                            <div class="category-info">
+                                <h3>@item.CategoryName</h3>
+                                <span>Xem sản phẩm</span>
+                            </div>
+                        </a>
+                    }
+                }
+                else
+                {
+                    <p>Hiện chưa có danh mục nào.</p>
+                }
+            </div>
+        </section>
+
+        <section class="rescue-section" id="rescue-section">
+            <div class="section-head">
+                <div>
+                    <p class="section-subtitle">Ưu tiên hỗ trợ</p>
+                    <h2 class="category-title">Các sản phẩm cần giải cứu</h2>
+                </div>
+            </div>
+
+            <div class="rescue-list">
+                <div class="empty-rescue-box">
+                    <p>Phần sản phẩm cần giải cứu sẽ được thêm sau.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>

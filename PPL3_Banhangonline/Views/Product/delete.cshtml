@@ -1,0 +1,31 @@
+﻿@model PPL3_Banhangonline.Models.Product
+
+<link rel="stylesheet" href="~/css/Product.css " />
+
+<div class="delete-container">
+    <div class="delete-box">
+        <h2>Xóa sản phẩm</h2>
+
+        <p class="warning-text">Bạn có chắc chắn muốn xóa sản phẩm này?</p>
+
+        <div class="image-preview">
+            <img src="@Model.Image" alt="Ảnh sản phẩm" />
+        </div>
+
+        <div class="info">
+            <p><strong>Tên:</strong> @Model.ProductName</p>
+            @* <p><strong>Giá:</strong> @Model.Price.ToString("N0") đ</p> *@
+            <p><strong>Số lượng:</strong> @Model.Stock</p>
+            <p><strong>Danh mục ID:</strong> @Model.CategoryID</p>
+        </div>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="ProductID" />
+
+            <div class="actions">
+                <button type="submit" class="btn-delete">Xóa</button>
+                <a asp-action="Index" class="btn-cancel">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>

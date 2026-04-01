@@ -1,0 +1,42 @@
+﻿@model PPL3_Banhangonline.Models.Cart
+
+@{
+    ViewData["Title"] = "Thanh toán";
+    decimal total = 0;
+}
+
+<h2>Thanh toán</h2>
+
+@if (Model == null || Model.CartItems == null || !Model.CartItems.Any())
+{
+    <p>Không có sản phẩm để thanh toán.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Tên sản phẩm</th>
+                <th>Đơn giá</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+                var lineTotal = item.Price * item.Quantity;
+                total += lineTotal;
+
+                <tr>
+                    <td>@item.Product?.ProductName</td>
+                    <td>@item.Price.ToString("N0") đ</td>
+                    <td>@item.Quantity</td>
+                    <td>@lineTotal.ToString("N0") đ</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4>Tổng thanh toán: <span style="color:green;">@total.ToString("N0") đ</span></h4>
+}

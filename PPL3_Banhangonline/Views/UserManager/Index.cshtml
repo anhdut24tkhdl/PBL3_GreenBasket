@@ -1,0 +1,35 @@
+﻿@model List<PPL3_Banhangonline.Models.Account>
+
+<link rel="stylesheet" href="~/css/usermanager.css" />
+
+<div class="user-page">
+    <div class="page-header">
+        <h2>Quản lý người dùng</h2>
+    </div>
+
+    <div class="table-box">
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tài khoản</th>
+                    <th>Role</th>
+                    <th>Chức năng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.AccountId</td>
+                        <td>@item.AccountName</td>
+                        <td>@item.Role</td>
+                        <td>
+                            <a asp-action="EditUser" asp-route-id="@item.AccountId" class="btn-edit">Sửa</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

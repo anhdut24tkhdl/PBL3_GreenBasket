@@ -1,0 +1,28 @@
+﻿@model PPL3_Banhangonline.Models.Category
+
+<link rel="stylesheet" href="~/css/category.css" />
+
+<div class="category-form-page">
+    <div class="delete-box">
+
+        <h2>Xóa danh mục</h2>
+
+        <p>Bạn có chắc muốn xóa danh mục này không?</p>
+
+        <div class="delete-info">
+            <p><strong>ID:</strong> @Model.CategoryID</p>
+            <p><strong>Tên:</strong> @Model.CategoryName</p>
+        </div>
+
+        <form asp-action="Delete" method="post">
+            <!-- ⚠️ phải truyền ID chứ không phải Name -->
+            <input type="hidden" asp-for="CategoryID" />
+
+            <div class="button-group">
+                <button type="submit" class="btn-delete">Xóa</button>
+                <a asp-action="Index" class="btn-back">Hủy</a>
+            </div>
+        </form>
+
+    </div>
+</div>

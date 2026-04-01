@@ -1,0 +1,21 @@
+﻿@model PPL3_Banhangonline.Models.Category
+
+<link rel="stylesheet" href="~/css/category.css" />
+
+<div class="form-container">
+    <h2>Thêm danh mục</h2>
+
+    <form asp-action="Create" method="post" class="form-box">
+        <div class="form-group">
+            <label>Tên danh mục</label>
+            <input asp-for="CategoryName" class="form-input" placeholder="Nhập tên danh mục..." />
+        </div>
+
+        <div class="form-group">
+            <label>Ảnh (URL)</label>
+            <input asp-for="Image" class="form-input" placeholder="Dán link ảnh..." />
+        </div>
+
+        <button type="submit" class="btn-submit">Lưu</button>
+    </form>
+</div>

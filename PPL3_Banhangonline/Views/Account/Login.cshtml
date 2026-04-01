@@ -1,0 +1,48 @@
+﻿@model PPL3_Banhangonline.Models.Account
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<link rel="stylesheet" href="~/css/account.css" />
+
+<div class="account-page">
+    <div class="account-box">
+        <h2>Đăng nhập</h2>
+        <p class="subtitle">Đăng nhập để tiếp tục mua sắm tại GreenBasket</p>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="error-message">
+                @ViewBag.Error
+            </div>
+        }
+
+        <form asp-controller="Account" asp-action="Login" method="post">
+            <div class="form-group">
+                <label>Tên đăng nhập</label>
+                <input asp-for="AccountName" class="form-control" placeholder="Nhập tên đăng nhập" />
+                <span asp-validation-for="AccountName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="Nhập mật khẩu" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn-submit">Đăng nhập</button>
+
+            <div class="extra-link">
+                Chưa có tài khoản?
+                <a asp-controller="Account" asp-action="Register">Đăng ký ngay</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

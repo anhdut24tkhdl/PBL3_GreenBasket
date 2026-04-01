@@ -1,0 +1,52 @@
+﻿@model PPL3_Banhangonline.Models.ChatViewModel
+
+@{
+    ViewData["Title"] = "Chat hỗ trợ";
+}
+
+<h2>Chat hỗ trợ khách hàng</h2>
+
+<div style="width: 500px; border: 1px solid #ccc; padding: 15px; border-radius: 10px;">
+    <div style="height: 350px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin-bottom: 15px; background: #fafafa;">
+        @if (Model.Messages != null && Model.Messages.Count > 0)
+        {
+            foreach (var msg in Model.Messages)
+            {
+                if (msg.Role == "user")
+                {
+                    <div style="text-align: right; margin-bottom: 10px;">
+                        <span style="display:inline-block; background:#d1e7dd; padding:8px 12px; border-radius:10px;">
+                            @msg.Content
+                        </span>
+                    </div>
+                }
+                else
+                {
+                    <div style="text-align: left; margin-bottom: 10px;">
+                        <span style="display:inline-block; background:#f8d7da; padding:8px 12px; border-radius:10px;">
+                            @msg.Content
+                        </span>
+                    </div>
+                }
+            }
+        }
+        else
+        {
+            <p>Chưa có tin nhắn nào.</p>
+        }
+    </div>
+
+    <form asp-action="Index" method="post">
+        <input asp-for="UserMessage" style="width: 75%; padding: 8px;" placeholder="Nhập tin nhắn..." />
+        <button type="submit" style="padding: 8px 14px;">Gửi</button>
+
+        @if (Model.Messages != null)
+        {
+            for (int i = 0; i < Model.Messages.Count; i++)
+            {
+                <input type="hidden" name="Messages[@i].Role" value="@Model.Messages[i].Role" />
+                <input type="hidden" name="Messages[@i].Content" value="@Model.Messages[i].Content" />
+            }
+        }
+    </form>
+</div>

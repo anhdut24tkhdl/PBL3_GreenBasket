@@ -1,0 +1,46 @@
+﻿@model List<PPL3_Banhangonline.Models.Category>
+
+<link rel="stylesheet" href="~/css/category.css" />
+
+<div class="category-page">
+    <div class="page-header">
+        <div>
+            <h2>Quản lý danh mục</h2>
+            <p>Danh sách các danh mục hiện có trong hệ thống</p>
+        </div>
+
+        <a asp-action="Create" class="btn-add">+ Thêm danh mục</a>
+    </div>
+
+    <div class="table-box">
+        <table class="category-table">
+            <thead>
+                <tr>
+                    <th>Tên danh mục</th>
+                    <th class="action-col">Chức năng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.CategoryName</td>
+                            <td class="actions">
+                                <a asp-action="Edit" asp-route-id="@item.CategoryID" class="btn-edit">Sửa</a>
+                                <a asp-action="Delete" asp-route-id="@item.CategoryID" class="btn-delete">Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2" class="empty-data">Chưa có danh mục nào.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
