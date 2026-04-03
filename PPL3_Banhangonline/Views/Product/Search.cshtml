@@ -1,0 +1,66 @@
+﻿@model List<PPL3_Banhangonline.Models.Product>
+
+@{
+    ViewData["Title"] = "Tìm kiếm sản phẩm";
+}
+<link rel="stylesheet" href="~/css/style.css" />
+
+<div class="my-container">
+    <h2 class="category-title" style="margin: 24px 0 16px;">Tìm kiếm sản phẩm</h2>
+
+    <form asp-action="Search" asp-controller="Product" method="get" class="search-form">
+        <div class="search-bar">
+            <input type="text" name="keyword" value="@ViewBag.Keyword"
+                   placeholder="Nhập tên sản phẩm..." class="form-control" />
+
+            <select name="categoryId" class="form-control">
+                <option value="">-- Tất cả danh mục --</option>
+                @foreach (var cat in ViewBag.Categories as List<PPL3_Banhangonline.Models.Category>)
+                {
+                    <option value="@cat.CategoryID"
+                        selected="@(ViewBag.CategoryId != null && ViewBag.CategoryId == cat.CategoryID ? "selected" : null)">
+                        @cat.CategoryName
+                    </option>
+                }
+            </select>
+
+            <button type="submit" class="btn-main">Tìm kiếm</button>
+        </div>
+    </form>
+
+    @if (ViewBag.Keyword != null || ViewBag.CategoryId != null)
+    {
+        <p class="section-subtitle" style="margin: 16px 0;">
+            Tìm thấy <strong>@Model.Count</strong> sản phẩm
+            @if (!string.IsNullOrEmpty(ViewBag.Keyword))
+            {
+                <span> cho từ khóa "<strong>@ViewBag.Keyword</strong>"</span>
+            }
+        </p>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="category-list">
+            @foreach (var p in Model)
+            {
+                <a asp-controller="Product" asp-action="Detail" asp-route-id="@p.ProductID" class="category-card">
+                    <div class="category-img-wrap">
+                        <img src="@p.Image" alt="@p.ProductName"
+                             onerror="this.src='https://cdn-icons-png.flaticon.com/512/2153/2153788.png'" />
+                    </div>
+                    <div class="category-info">
+                        <h3>@p.ProductName</h3>
+                        <span>@string.Format("{0:N0} đ", p.Price)</span>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+    else if (ViewBag.Keyword != null || ViewBag.CategoryId != null)
+    {
+        <div class="empty-rescue-box">
+            <p>Không tìm thấy sản phẩm nào phù hợp.</p>
+        </div>
+    }
+</div>

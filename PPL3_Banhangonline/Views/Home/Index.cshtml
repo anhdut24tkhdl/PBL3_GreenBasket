@@ -58,10 +58,10 @@
                     </div>
                 </a>
 
-                <div class="search-area">
-                    <input type="text" placeholder="Tìm kiếm sản phẩm..." />
-                    <button type="button">Tìm</button>
-                </div>
+                <form asp-controller="Product" asp-action="Search" method="get" class="search-area">
+    <input type="text" name="keyword" placeholder="Tìm kiếm sản phẩm..." />
+    <button type="submit">Tìm</button>
+</form>
             </div>
         </div>
     </header>

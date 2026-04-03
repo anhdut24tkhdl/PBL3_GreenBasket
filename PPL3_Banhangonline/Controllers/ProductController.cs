@@ -214,5 +214,25 @@ namespace PPL3_Banhangonline.Controllers
 
             return View(products);  
         }
+
+        public IActionResult Search(string keyword, int? categoryId)
+        {
+            var query = _context.Products
+                .Include(p => p.Shop)
+                .Include(p => p.Category)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+                query = query.Where(p => p.ProductName.Contains(keyword));
+
+            if (categoryId.HasValue)
+                query = query.Where(p => p.CategoryID == categoryId.Value);
+
+            ViewBag.Keyword = keyword;
+            ViewBag.CategoryId = categoryId;
+            ViewBag.Categories = _context.Categories.ToList();
+
+            return View(query.ToList());
+        }
     }
 }
