@@ -1,0 +1,67 @@
+﻿@model PPL3_Banhangonline.Models.Shop
+
+@{
+    ViewData["Title"] = Model.ShopName;
+}
+<link rel="stylesheet" href="~/css/main.css" />
+<link rel="stylesheet" href="~/css/products.css" />
+
+<div class="container" style="margin-top: 32px; margin-bottom: 48px;">
+
+    <div style="background: #fff; border-radius: 16px; padding: 28px 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); margin-bottom: 32px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div>
+                <h1 style="font-size: 1.8rem; font-weight: 700; color: #2d6a4f; margin-bottom: 6px;">
+                    @Model.ShopName
+                </h1>
+                <p style="color: #888; margin: 0;">Người bán: <strong>@Model.Seller?.Name</strong></p>
+            </div>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline btn-back-home">
+                ← Quay lại trang chủ
+            </a>
+        </div>
+    </div>
+
+    <h3 style="margin-bottom: 20px;">Sản phẩm của cửa hàng</h3>
+
+    @if (Model.Products != null && Model.Products.Any())
+    {
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 product-list-custom">
+            @foreach (var item in Model.Products)
+            {
+                <div class="col">
+                    <div class="product-card custom-product-card">
+                        <div class="product-media custom-product-media">
+                            <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductID" class="product-image">
+                                <img src="@item.Image" alt="@item.ProductName"
+                                     onerror="this.src='https://cdn-icons-png.flaticon.com/512/2153/2153788.png'" />
+                            </a>
+                        </div>
+                        <div class="product-content custom-product-content">
+                            <h6 class="product-name custom-product-name">
+                                <a asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductID">
+                                    @item.ProductName
+                                </a>
+                            </h6>
+                            <h6 class="product-price custom-product-price">
+                                <span>@item.Price?.ToString("N0") đ</span>
+                            </h6>
+                            <a asp-controller="Cart"
+                               asp-action="AddToCart"
+                               asp-route-productId="@item.ProductID"
+                               class="product-add custom-add-cart-btn">
+                                Thêm vào giỏ hàng
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert-info custom-empty-box">
+            <p>Cửa hàng này hiện chưa có sản phẩm.</p>
+        </div>
+    }
+</div>

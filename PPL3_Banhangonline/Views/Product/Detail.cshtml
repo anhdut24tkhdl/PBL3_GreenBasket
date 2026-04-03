@@ -1,0 +1,65 @@
+﻿@model PPL3_Banhangonline.Models.Product
+
+@{
+    ViewData["Title"] = Model.ProductName;
+}
+<link rel="stylesheet" href="~/css/main.css" />
+<link rel="stylesheet" href="~/css/products.css" />
+
+<div class="container" style="margin-top: 32px; margin-bottom: 48px;">
+
+    <a asp-controller="Home" asp-action="Index" class="btn btn-outline btn-back-home" style="margin-bottom: 24px; display:inline-block;">
+        ← Quay lại trang chủ
+    </a>
+
+    <div style="display: flex; gap: 40px; flex-wrap: wrap; background: #fff; border-radius: 16px; padding: 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+
+        <div style="flex: 1; min-width: 280px; max-width: 420px;">
+            <img src="@Model.Image" alt="@Model.ProductName"
+                 onerror="this.src='https://cdn-icons-png.flaticon.com/512/2153/2153788.png'"
+                 style="width:100%; border-radius: 12px; object-fit: cover; max-height: 380px;" />
+        </div>
+
+        <div style="flex: 2; min-width: 280px;">
+            <p style="color: #888; margin-bottom: 4px;">@Model.Category?.CategoryName</p>
+            <h1 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 12px;">@Model.ProductName</h1>
+
+            <div style="font-size: 1.6rem; font-weight: 700; color: #2d6a4f; margin-bottom: 16px;">
+                @Model.Price?.ToString("N0") đ
+            </div>
+
+            <p style="color: #555; line-height: 1.7; margin-bottom: 20px;">@Model.Description</p>
+
+            <div style="background: #f8f8f8; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px;">
+                <span style="color: #888;">Còn lại: </span>
+                <strong>@Model.Stock sản phẩm</strong>
+            </div>
+
+            <a asp-controller="Cart"
+               asp-action="AddToCart"
+               asp-route-productId="@Model.ProductID"
+               class="custom-add-cart-btn"
+               style="display:inline-block; padding: 12px 32px; font-size: 1rem;">
+                Thêm vào giỏ hàng
+            </a>
+        </div>
+    </div>
+
+    <div style="margin-top: 32px; background: #fff; border-radius: 16px; padding: 24px 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.08);">
+        <h3 style="margin-bottom: 16px; color: #2d6a4f;">Thông tin cửa hàng</h3>
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+            <div>
+                <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 4px;">@Model.Shop?.ShopName</p>
+                <p style="color: #888; margin: 0;">Người bán: @Model.Shop?.Seller?.Name</p>
+            </div>
+            <a asp-controller="Shop"
+               asp-action="Detail"
+               asp-route-id="@Model.ShopID"
+               class="btn btn-outline"
+               style="padding: 10px 24px; border-radius: 8px;">
+               Xem cửa hàng →
+            </a>
+        </div>
+    </div>
+
+</div>

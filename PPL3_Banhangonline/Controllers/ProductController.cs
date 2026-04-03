@@ -234,5 +234,18 @@ namespace PPL3_Banhangonline.Controllers
 
             return View(query.ToList());
         }
+        public IActionResult Detail(int id)
+        {
+            var product = _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Shop)
+                    .ThenInclude(s => s.Seller)
+                .FirstOrDefault(p => p.ProductID == id);
+
+            if (product == null)
+                return Content("Không tìm thấy sản phẩm.");
+
+            return View(product);
+        }
     }
 }
