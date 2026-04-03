@@ -48,7 +48,7 @@ namespace PPL3_Banhangonline.Database
             modelBuilder.Entity<Price>()
                 .Property(p => p.Value)
                 .HasPrecision(18, 2);
-
+        
          modelBuilder.Entity<CartItem>()
         .HasOne(ci => ci.Product)
         .WithMany(p => p.CartItems) // Đảm bảo trong class Product có: public ICollection<CartItem> CartItems { get; set; }
