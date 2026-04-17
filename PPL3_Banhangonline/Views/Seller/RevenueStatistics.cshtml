@@ -1,0 +1,89 @@
+﻿@{
+    ViewData["Title"] = "Thống kê doanh thu";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container py-4">
+    @* Thanh điều hướng quay về như Cảm yêu cầu *@
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb bg-light p-3 rounded shadow-sm">
+            <li class="breadcrumb-item">
+                <a asp-action="Index" class="text-decoration-none text-success">
+                    <i class="bi bi-house-door-fill"></i> Kênh Người Bán
+                </a>
+            </li>
+            <li class="breadcrumb-item active">Thống kê & Doanh thu</li>
+        </ol>
+    </nav>
+
+    <h2 class="text-success fw-bold mb-4">📊 Phân Tích Kinh Doanh</h2>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm bg-success text-white">
+                <div class="card-body p-4 text-center">
+                    <h5 class="text-uppercase opacity-75">Tổng doanh thu</h5>
+                    <h1 class="display-4 fw-bold">@ViewBag.TotalRevenue?.ToString("N0")đ</h1>
+                    <p class="mb-0 small">Dựa trên các đơn hàng đã giao thành công</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm bg-white border-start border-success border-4">
+                <div class="card-body p-4 text-center">
+                    <h5 class="text-muted text-uppercase">Số đơn hoàn thành</h5>
+                    <h1 class="display-4 fw-bold text-success">@ViewBag.TotalOrders</h1>
+                    <p class="mb-0 text-muted">Đã giao tận tay khách hàng</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Doanh thu 7 ngày gần nhất</h5>
+        </div>
+        <div class="card-body p-4">
+            <canvas id="revenueChart" style="max-height: 400px;"></canvas>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        const revenueChart = new Chart(ctx, {
+            type: 'line', // Biểu đồ đường cho xu hướng doanh thu
+            data: {
+                labels: @Html.Raw(Json.Serialize(ViewBag.ChartLabels)),
+                datasets: [{
+                    label: 'Doanh thu (VNĐ)',
+                    data: @Html.Raw(Json.Serialize(ViewBag.ChartValues)),
+                    borderColor: '#2e7d32',
+                    backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                    fill: true,
+                    tension: 0.4, // Tạo độ cong cho đường kẻ
+                    pointRadius: 6,
+                    pointBackgroundColor: '#2e7d32'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString('vi-VN') + 'đ';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+}

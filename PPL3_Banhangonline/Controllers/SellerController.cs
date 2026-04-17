@@ -261,5 +261,42 @@ namespace PPL3_Banhangonline.Controllers
             return RedirectToAction("ManageProducts");
         }
         
+        public IActionResult RevenueStatistics()
+        {
+            var accountId = HttpContext.Session.GetInt32("AccountId");
+            var seller = _context.Sellers.Include(s => s.Shop).FirstOrDefault(s => s.UserID == accountId);
+            if (seller?.Shop == null) return RedirectToAction("Index");
+
+            // 1. Lấy danh sách các đơn hàng thành công của Shop này
+            var shopOrders = _context.OrderDetails
+                .Include(od => od.Order)
+                .Where(od => od.Product.ShopID == seller.Shop.ShopID && od.Order.Status == "Delivered")
+                .Select(od => new {
+                    Date = od.Order.OrderDate,
+                    Total = od.Quantity * od.UnitPrice
+                })
+                .ToList();
+
+            // 2. Tính toán các con số tổng quát
+            ViewBag.TotalRevenue = shopOrders.Sum(x => x.Total);
+            ViewBag.TotalOrders = shopOrders.Select(x => x.Date).Count();
+            ViewBag.ShopName = seller.Shop.ShopName;
+
+            // 3. Chuẩn bị dữ liệu cho biểu đồ (7 ngày gần nhất)
+            var last7Days = Enumerable.Range(0, 7)
+                .Select(i => DateTime.Now.Date.AddDays(-i))
+                .OrderBy(d => d)
+                .ToList();
+
+            var chartData = last7Days.Select(date => new {
+                Date = date.ToString("dd/MM"),
+                Revenue = shopOrders.Where(x => x.Date?.Date == date).Sum(x => x.Total)
+            }).ToList();
+
+            ViewBag.ChartLabels = chartData.Select(x => x.Date).ToList();
+            ViewBag.ChartValues = chartData.Select(x => x.Revenue).ToList();
+
+            return View();
+        }
     }
 }
