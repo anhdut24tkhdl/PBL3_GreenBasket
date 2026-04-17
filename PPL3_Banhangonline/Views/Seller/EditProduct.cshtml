@@ -1,0 +1,41 @@
+﻿@model PPL3_Banhangonline.Models.Product
+@{
+    ViewData["Title"] = "Chỉnh sửa sản phẩm";
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white"><h4>Chỉnh sửa sản phẩm</h4></div>
+        <div class="card-body">
+            <form asp-action="EditProduct" method="post">
+                @* Cần ID ẩn để update *@
+                <input type="hidden" asp-for="ProductID" />
+
+                <div class="mb-3">
+                    <label class="fw-bold">Tên nông sản</label>
+                    <input asp-for="ProductName" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="fw-bold">Loại sản phẩm</label>
+                    <select asp-for="CategoryID" class="form-select">
+                        @foreach (var cat in ViewBag.Categories as List<Category>)
+                        {
+                            <option value="@cat.CategoryID">@cat.CategoryName</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col-6 mb-3"><label class="fw-bold">Giá bán</label><input asp-for="Price" class="form-control" /></div>
+                    <div class="col-6 mb-3"><label class="fw-bold">Số lượng kho</label><input asp-for="Stock" class="form-control" /></div>
+                </div>
+
+                <div class="mb-3"><label class="fw-bold">Link ảnh</label><input asp-for="Image" class="form-control" /></div>
+
+                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                <a asp-action="ManageProducts" class="btn btn-secondary">Quay lại</a>
+            </form>
+        </div>
+    </div>
+</div>

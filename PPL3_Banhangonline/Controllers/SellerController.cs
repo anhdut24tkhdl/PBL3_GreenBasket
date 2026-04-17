@@ -150,5 +150,116 @@ namespace PPL3_Banhangonline.Controllers
             TempData["Success"] = "Đăng ký seller thành công!";
             return RedirectToAction("Index", "Seller");
         }
+
+        public IActionResult ManageOrders(string status = "Processing")
+        {
+            var accountId = HttpContext.Session.GetInt32("AccountId");
+            var seller = _context.Sellers.Include(s => s.Shop).FirstOrDefault(s => s.UserID == accountId);
+
+            if (seller?.Shop == null) return RedirectToAction("Index");
+
+            // Lấy các đơn hàng có chứa sản phẩm thuộc Shop của Seller này
+            var orders = _context.OrderDetails
+                .Include(od => od.Order)
+                .ThenInclude(o => o.Customer)
+                .Include(od => od.Product)
+                .Where(od => od.Product.ShopID == seller.Shop.ShopID && od.Order.Status == status)
+                .Select(od => od.Order)
+                .Distinct()
+                .ToList();
+
+            ViewBag.CurrentStatus = status;
+            ViewBag.ShopName = seller.Shop.ShopName;
+            return View(orders);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateOrderStatus(int orderId, string newStatus)
+        {
+            var order = _context.Orders.Find(orderId);
+            if (order != null)
+            {
+                order.Status = newStatus;
+                _context.SaveChanges();
+                TempData["Success"] = $"Đã cập nhật đơn hàng #{orderId} thành: {newStatus}";
+            }
+            return RedirectToAction("ManageOrders", new { status = newStatus });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProduct(Product product)
+        {
+            var accountId = HttpContext.Session.GetInt32("AccountId");
+            var seller = _context.Sellers.Include(s => s.Shop).FirstOrDefault(s => s.UserID == accountId);
+
+            if (ModelState.IsValid)
+            {
+                product.ShopID = seller.Shop.ShopID; // Gán sản phẩm vào đúng Shop của Seller này
+                _context.Products.Add(product);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Thêm sản phẩm thành công!";
+                return RedirectToAction("ManageProducts");
+            }
+            return View(product);
+        }
+        [HttpGet]
+        public IActionResult CreateProduct()
+        {
+            var accountId = HttpContext.Session.GetInt32("AccountId");
+            if (accountId == null) return RedirectToAction("Login", "Account");
+
+            // Lấy danh sách loại để chọn
+            ViewBag.Categories = _context.Categories.ToList();
+            return View();
+        }
+        // ================= CHỈNH SỬA SẢN PHẨM =================
+        [HttpGet]
+        public IActionResult EditProduct(int id)
+        {
+            var product = _context.Products.Find(id);
+            if (product == null) return NotFound();
+
+            ViewBag.Categories = _context.Categories.ToList();
+            return View(product);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProduct(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                // Giữ lại ShopID cũ (tránh bị null khi update)
+                var existingProduct = _context.Products.AsNoTracking().FirstOrDefault(p => p.ProductID == product.ProductID);
+                product.ShopID = existingProduct.ShopID;
+
+                _context.Products.Update(product);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Cập nhật thành công!";
+                return RedirectToAction("ManageProducts");
+            }
+
+            ViewBag.Categories = _context.Categories.ToList();
+            return View(product);
+        }
+        public IActionResult DeleteProduct(int id)
+        {
+            var product = _context.Products.Find(id);
+            if (product == null) return NotFound();
+
+            try
+            {
+                _context.Products.Remove(product);
+                _context.SaveChanges();
+                TempData["Success"] = "Đã xóa sản phẩm thành công.";
+            }
+            catch (Exception)
+            {
+                // Nếu lỗi do ràng buộc khóa ngoại (đã có người mua hàng này)
+                TempData["Error"] = "Không thể xóa sản phẩm này vì đã có trong đơn hàng hoặc giỏ hàng của khách!";
+            }
+
+            return RedirectToAction("ManageProducts");
+        }
+        
     }
 }

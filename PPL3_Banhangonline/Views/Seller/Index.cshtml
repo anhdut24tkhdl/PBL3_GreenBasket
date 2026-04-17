@@ -1,38 +1,68 @@
-﻿@{
+﻿@model PPL3_Banhangonline.Models.Shop
+@{
     ViewData["Title"] = "Trang người bán";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <link rel="stylesheet" href="~/css/seller.css" />
 
-<div class="shop-page">
-    <div class="shop-header">
-        <h1>Trang quản lý người bán</h1>
-
-        <h2 style="color:#2e7d32;">
-            Shop: @ViewBag.Shopname
-        </h2>
-
-        <p>Chọn chức năng bạn muốn sử dụng</p>
+<div class="shop-page container py-4">
+    <div class="shop-header text-center mb-5">
+        <h1 class="display-5 fw-bold text-success">Kênh Người Bán GreenBasket</h1>
+        <div class="d-inline-block p-2 px-4 bg-light rounded-pill border border-success">
+            <span class="text-muted">Cửa hàng:</span>
+            <strong class="text-success">@Model.ShopName</strong>
+        </div>
     </div>
 
-    <div class="shop-function-list">
-        <a asp-controller="Product" asp-action="Index" class="shop-card">
-            <div class="shop-card-icon">📦</div>
-            <h2>Quản lí sản phẩm</h2>
-            <p>Thêm, sửa, xóa và cập nhật thông tin sản phẩm.</p>
-        </a>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
 
-        <a asp-controller="Shop" asp-action="OrderManagement" class="shop-card">
-            <div class="shop-card-icon">🧾</div>
-            <h2>Quản lí đơn hàng</h2>
-            <p>Theo dõi đơn hàng, cập nhật trạng thái và xử lí đơn.</p>
-        </a>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <a asp-action="ManageProducts" class="card h-100 text-decoration-none border-0 shadow-sm hover-card">
+                <div class="card-body text-center p-4">
+                    <div class="fs-1 mb-3">📦</div>
+                    <h4 class="card-title text-dark">Quản lý sản phẩm</h4>
+                    <p class="card-text text-muted small">Cập nhật kho hàng, giá cả và nông sản mới.</p>
+                </div>
+            </a>
+        </div>
 
-        <a asp-controller="Shop" asp-action="RevenueStatistics" class="shop-card">
-            <div class="shop-card-icon">📊</div>
-            <h2>Xem thống kê doanh thu</h2>
-            <p>Xem doanh thu, số đơn hàng và tình hình kinh doanh.</p>
-        </a>
+        <div class="col-md-4">
+            <a asp-action="ManageOrders" class="card h-100 text-decoration-none border-0 shadow-sm hover-card">
+                <div class="card-body text-center p-4 position-relative">
+                    @* Thêm Badge thông báo đơn mới nếu muốn *@
+                    <div class="fs-1 mb-3">🧾</div>
+                    <h4 class="card-title text-dark">Xử lý đơn hàng</h4>
+                    <p class="card-text text-muted small">Kiểm tra đơn mới, xác nhận và giao cho Shipper.</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a asp-action="RevenueStatistics" class="card h-100 text-decoration-none border-0 shadow-sm hover-card">
+                <div class="card-body text-center p-4">
+                    <div class="fs-1 mb-3">📊</div>
+                    <h4 class="card-title text-dark">Doanh thu & Thống kê</h4>
+                    <p class="card-text text-muted small">Xem biểu đồ tăng trưởng và tiền về ví.</p>
+                </div>
+            </a>
+        </div>
     </div>
 </div>
+
+<style>
+    .hover-card {
+        transition: all 0.3s ease;
+    }
+
+        .hover-card:hover {
+            transform: translateY(-10px);
+            border: 1px solid #2e7d32 !important;
+        }
+</style>

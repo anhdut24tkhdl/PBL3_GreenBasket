@@ -1,0 +1,60 @@
+﻿@model IEnumerable<PPL3_Banhangonline.Models.Order>
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb bg-light p-3 rounded shadow-sm">
+            <li class="breadcrumb-item">
+                <a asp-controller="Seller" asp-action="Index" class="text-decoration-none text-success">
+                    <i class="bi bi-house-door-fill"></i> Kênh Người Bán
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Quản lý đơn hàng</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>Đơn hàng của Shop: @ViewBag.ShopName</h3>
+        <div class="btn-group">
+            <a asp-action="ManageOrders" asp-route-status="Processing" class="btn btn-outline-primary @(ViewBag.CurrentStatus == "Processing" ? "active" : "")">Chờ xác nhận</a>
+            <a asp-action="ManageOrders" asp-route-status="Shipping" class="btn btn-outline-warning @(ViewBag.CurrentStatus == "Shipping" ? "active" : "")">Đang giao</a>
+            <a asp-action="ManageOrders" asp-route-status="Delivered" class="btn btn-outline-success @(ViewBag.CurrentStatus == "Delivered" ? "active" : "")">Đã giao</a>
+        </div>
+    </div>
+
+    <table class="table table-hover border">
+        <thead class="bg-light">
+            <tr>
+                <th>Khách hàng</th>
+                <th>Ngày đặt</th>
+                <th>Thanh toán</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var o in Model)
+            {
+                <tr>
+                    <td><strong>@o.Customer?.Name</strong><br /><small>@o.Customer?.Phone</small></td>
+                    <td>@o.OrderDate?.ToString("dd/MM/yyyy")</td>
+                    <td class="text-danger fw-bold">@o.TotalAmount?.ToString("N0")đ</td>
+                    <td>
+                        @if (o.Status == "Processing")
+                        {
+                            <form asp-action="UpdateOrderStatus" method="post">
+                                <input type="hidden" name="newStatus" value="Shipping" />
+                                <button type="submit" class="btn btn-sm btn-primary">Xác nhận đơn</button>
+                            </form>
+                        }
+                        else if (o.Status == "Shipping")
+                        {
+                            <form asp-action="UpdateOrderStatus" method="post">
+                                <input type="hidden" name="newStatus" value="Delivered" />
+                                <button type="submit" class="btn btn-sm btn-success">Giao thành công</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

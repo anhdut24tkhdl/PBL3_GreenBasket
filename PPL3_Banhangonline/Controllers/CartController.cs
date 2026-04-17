@@ -160,6 +160,7 @@ namespace PPL3_Banhangonline.Controllers
 
             var cartItem = _context.CartItems
                 .Include(ci => ci.Cart)
+                .Include(ci => ci.Product) 
                 .FirstOrDefault(ci => ci.CartItemID == cartItemId && ci.Cart.CustomerID == customerId);
 
             if (cartItem != null)
@@ -169,7 +170,13 @@ namespace PPL3_Banhangonline.Controllers
                     _context.CartItems.Remove(cartItem);
                 }
                 else
-                {
+                {   
+                    // KIỂM TRA KHO Ở ĐÂY
+                    if (quantity > cartItem.Product.Stock)
+                    {
+                        TempData["Message"] = $"Sản phẩm {cartItem.Product.ProductName} chỉ còn {cartItem.Product.Stock} sản phẩm trong kho.";
+                        return RedirectToAction("Index");
+                    }
                     cartItem.Quantity = quantity;
                 }
 
