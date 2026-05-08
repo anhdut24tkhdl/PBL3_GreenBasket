@@ -17,12 +17,15 @@
             _ => status ?? "Chưa cập nhật"
         };
     }
+
+    var statusSteps = new List<string> { "Pending", "Processing", "Shipping", "Delivered" };
+    var currentStepIndex = statusSteps.IndexOf(Model.Status ?? string.Empty);
 }
 
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 class="fw-bold text-success mb-0">Chi tiet don #@Model.OrderID</h2>
-        <a asp-action="Orders" class="btn btn-outline-secondary">Quay lai</a>
+<div class="container py-4 order-page">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <h2 class="fw-bold text-success mb-0">Chi tiết đơn #@Model.OrderID</h2>
+        <a asp-action="Orders" class="btn btn-outline-secondary rounded-pill px-3">Quay lại</a>
     </div>
 
     @if (TempData["Success"] != null)
@@ -39,28 +42,64 @@
         </div>
     }
 
-    <div class="card shadow-sm border-0 p-3 mb-4">
-        <div class="row g-3">
-            <div class="col-md-4">
-                <div><strong>Ngay dat:</strong> @Model.OrderDate?.ToString("dd/MM/yyyy HH:mm")</div>
+    <div class="card border-0 shadow-sm p-3 mb-4">
+        <div class="row g-3 align-items-center">
+            <div class="col-lg-8">
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <div><strong>Ngày đặt:</strong> @Model.OrderDate?.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                    <div class="col-md-4">
+                        <div><strong>Trạng thái:</strong> @HienThiTrangThai(Model.Status)</div>
+                    </div>
+                    <div class="col-md-4">
+                        <div><strong>Thanh toán:</strong> @HienThiTrangThai(Model.Payment?.Status)</div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-4">
-                <div><strong>Trạng thái:</strong> @HienThiTrangThai(Model.Status)</div>
-            </div>
-            <div class="col-md-4">
-                <div><strong>Thanh toán:</strong> @HienThiTrangThai(Model.Payment?.Status)</div>
+            <div class="col-lg-4 text-lg-end">
+                <a asp-controller="Order" asp-action="Invoice" asp-route-id="@Model.OrderID" class="btn btn-success btn-sm rounded-pill px-3 me-2">In hóa đơn</a>
+                <a asp-controller="Customer" asp-action="EditProfile" class="btn btn-outline-primary btn-sm rounded-pill px-3">Liên hệ</a>
             </div>
         </div>
     </div>
 
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-light fw-bold">Tiến trình đơn hàng</div>
+        <div class="card-body">
+            <div class="order-timeline">
+                @foreach (var step in statusSteps)
+                {
+                    var stepIndex = statusSteps.IndexOf(step);
+                    var isDone = currentStepIndex >= 0 && stepIndex <= currentStepIndex;
+                    <div class="timeline-item @(isDone ? "done" : "")">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-label">@HienThiTrangThai(step)</div>
+                    </div>
+                }
+                @if (Model.Status == "Cancelled")
+                {
+                    <div class="timeline-item cancelled done">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-label">@HienThiTrangThai(Model.Status)</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-info border-0 shadow-sm">
+        <strong>Lưu ý đánh giá:</strong> Bạn chỉ có thể đánh giá sản phẩm sau khi đơn hàng ở trạng thái <strong>Đã giao</strong>.
+    </div>
+
     <div class="card shadow-sm border-0">
-        <div class="card-header bg-light fw-bold">San pham trong don</div>
+        <div class="card-header bg-light fw-bold">Sản phẩm trong đơn</div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table mb-0 align-middle">
                     <thead>
                         <tr>
-                            <th>San pham</th>
+                            <th>Sản phẩm</th>
                             <th class="text-center">So luong</th>
                             <th class="text-end">Don gia</th>
                             <th class="text-end">Thanh tien</th>
@@ -71,7 +110,12 @@
                         @foreach (var item in Model.OrderDetails)
                         {
                             <tr>
-                                <td>@item.Product?.ProductName</td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img class="order-product-image" src="@(string.IsNullOrWhiteSpace(item.Product?.Image) ? "https://via.placeholder.com/56x56?text=SP" : item.Product!.Image)" alt="@item.Product?.ProductName" />
+                                        <span>@item.Product?.ProductName</span>
+                                    </div>
+                                </td>
                                 <td class="text-center">@item.Quantity</td>
                                 <td class="text-end">@item.UnitPrice?.ToString("N0") đ</td>
                                 <td class="text-end fw-semibold">@((item.UnitPrice * item.Quantity)?.ToString("N0")) đ</td>
@@ -88,9 +132,7 @@
                                     }
                                     else
                                     {
-                                        <span class="text-muted small">
-                                            Chỉ đánh giá sau khi đã giao
-                                        </span>
+                                        <span class="text-muted small">Chỉ đánh giá sau khi đã giao thành công</span>
                                     }
                                 </td>
                             </tr>
@@ -108,3 +150,11 @@
         </div>
     </div>
 </div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/order.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/order.js" asp-append-version="true"></script>
+}

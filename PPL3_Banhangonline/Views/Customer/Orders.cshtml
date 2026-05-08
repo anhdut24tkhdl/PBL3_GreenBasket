@@ -17,69 +17,115 @@
             _ => status ?? "Chưa cập nhật"
         };
     }
+
+    string MauTrangThai(string? status)
+    {
+        return status switch
+        {
+            "Delivered" or "Paid" => "badge-success",
+            "Shipping" => "badge-warning",
+            "Cancelled" => "badge-danger",
+            _ => "badge-info"
+        };
+    }
 }
 
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+<div class="container py-4 order-page">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <h2 class="fw-bold text-success mb-0">Đơn hàng đã mua</h2>
-        <a asp-controller="Customer" asp-action="EditProfile" class="btn btn-outline-primary">Sửa thông tin cá nhân</a>
+        <a asp-controller="Customer" asp-action="EditProfile" class="btn btn-outline-primary rounded-pill px-3">Sửa thông tin cá nhân</a>
     </div>
 
-    <form method="get" class="row g-2 mb-4">
-        <div class="col-sm-4">
-            <select class="form-select" name="status">
-                <option value="">Tất cả trạng thái</option>
-                <option value="Processing" selected="@(Model.CurrentStatus == "Processing")">Đang xử lý</option>
-                <option value="Shipping" selected="@(Model.CurrentStatus == "Shipping")">Đang giao</option>
-                <option value="Delivered" selected="@(Model.CurrentStatus == "Delivered")">Đã giao</option>
-                <option value="Cancelled" selected="@(Model.CurrentStatus == "Cancelled")">Đã hủy</option>
-            </select>
-        </div>
-        <div class="col-sm-2">
-            <button type="submit" class="btn btn-success w-100">Lọc</button>
+    <form method="get" class="card border-0 shadow-sm p-3 mb-4 order-filter-form">
+        <div class="row g-2">
+            <div class="col-lg-3 col-md-6">
+                <input type="text" class="form-control" name="keyword" value="@Model.CurrentKeyword" placeholder="Tìm theo mã đơn / sản phẩm" />
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <select class="form-select" name="status">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="Processing" selected="@(Model.CurrentStatus == "Processing")">Đang xử lý</option>
+                    <option value="Shipping" selected="@(Model.CurrentStatus == "Shipping")">Đang giao</option>
+                    <option value="Delivered" selected="@(Model.CurrentStatus == "Delivered")">Đã giao</option>
+                    <option value="Cancelled" selected="@(Model.CurrentStatus == "Cancelled")">Đã hủy</option>
+                </select>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <input type="date" class="form-control" name="fromDate" value="@Model.CurrentFromDate?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <input type="date" class="form-control" name="toDate" value="@Model.CurrentToDate?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-lg-1 col-md-6">
+                <input type="number" class="form-control" name="minAmount" value="@Model.CurrentMinAmount" min="0" placeholder="Từ" />
+            </div>
+            <div class="col-lg-1 col-md-6">
+                <input type="number" class="form-control" name="maxAmount" value="@Model.CurrentMaxAmount" min="0" placeholder="Đến" />
+            </div>
+            <div class="col-lg-1 col-md-12 d-grid">
+                <button type="submit" class="btn btn-success">Lọc</button>
+            </div>
         </div>
     </form>
 
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-light fw-bold">Đơn hàng thường</div>
-        <div class="card-body p-0">
-            @if (Model.RegularOrders.Any())
-            {
-                <div class="table-responsive">
-                    <table class="table mb-0 align-middle">
-                        <thead>
-                            <tr>
-                                <th>Mã đơn</th>
-                                <th>Ngày đặt</th>
-                                <th>Tổng tiền</th>
-                                <th>Thanh toán</th>
-                                <th>Vận chuyển</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var order in Model.RegularOrders)
-                            {
-                                <tr>
-                                    <td>#@order.OrderID</td>
-                                    <td>@order.OrderDate?.ToString("dd/MM/yyyy HH:mm")</td>
-                                    <td class="fw-semibold">@order.TotalAmount?.ToString("N0") đ</td>
-                                    <td>@HienThiTrangThai(order.Payment?.Status)</td>
-                                    <td>@HienThiTrangThai(order.Status)</td>
-                                    <td class="text-end">
-                                        <a asp-action="OrderDetail" asp-route-id="@order.OrderID" class="btn btn-sm btn-outline-success">Xem chi tiết</a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
-            else
-            {
-                <div class="p-3 text-muted">Bạn chưa có đơn hàng thường nào.</div>
-            }
-        </div>
+    <div class="mb-4">
+        <h5 class="fw-bold mb-3">Đơn hàng thường</h5>
+        @if (Model.RegularOrders.Any())
+        {
+            <div class="row g-3">
+                @foreach (var order in Model.RegularOrders)
+                {
+                    <div class="col-12">
+                        <article class="card border-0 shadow-sm order-card h-100" data-order-search="#@order.OrderID @(string.Join(" ", order.OrderDetails.Select(od => od.Product?.ProductName)))">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+                                    <div>
+                                        <h6 class="mb-1 fw-bold">Đơn #@order.OrderID</h6>
+                                        <div class="text-muted small">Ngày đặt: @order.OrderDate?.ToString("dd/MM/yyyy HH:mm")</div>
+                                    </div>
+                                    <span class="status-badge @MauTrangThai(order.Status)">@HienThiTrangThai(order.Status)</span>
+                                </div>
+
+                                <div class="row g-3 align-items-center">
+                                    <div class="col-lg-8">
+                                        <div class="sample-products">
+                                            @if (order.OrderDetails.Any())
+                                            {
+                                                @foreach (var detail in order.OrderDetails.Take(3))
+                                                {
+                                                    <div class="sample-product-item">
+                                                        <img src="@(string.IsNullOrWhiteSpace(detail.Product?.Image) ? "https://via.placeholder.com/48x48?text=SP" : detail.Product!.Image)" alt="@detail.Product?.ProductName" />
+                                                        <div>
+                                                            <div class="sample-name">@(detail.Product?.ProductName ?? "Sản phẩm không xác định")</div>
+                                                            <div class="text-muted small">SL: @(detail.Quantity ?? 0)</div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted small">Chưa có dữ liệu sản phẩm mẫu.</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="text-lg-end">
+                                            <div class="text-muted small mb-1">Thanh toán: @HienThiTrangThai(order.Payment?.Status)</div>
+                                            <div class="fw-bold text-danger fs-5 mb-2">@order.TotalAmount?.ToString("N0") đ</div>
+                                            <a asp-action="OrderDetail" asp-route-id="@order.OrderID" class="btn btn-outline-success btn-sm rounded-pill px-3">Xem chi tiết</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="card border-0 shadow-sm"><div class="card-body text-muted">Bạn chưa có đơn hàng thường nào.</div></div>
+        }
     </div>
 
     <div class="card shadow-sm border-0">
@@ -120,3 +166,11 @@
         </div>
     </div>
 </div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/order.css" asp-append-version="true" />
+}
+
+@section Scripts {
+    <script src="~/js/order.js" asp-append-version="true"></script>
+}
