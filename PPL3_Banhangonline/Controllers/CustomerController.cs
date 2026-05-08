@@ -28,7 +28,7 @@ namespace PPL3_Banhangonline.Controllers
             return null;
         }
 
-        public IActionResult Orders(string? status)
+        public IActionResult Orders(string? status, DateTime? fromDate, DateTime? toDate, decimal? minAmount, decimal? maxAmount, string? keyword)
         {
             if (KiemTraCustomer() != null)
             {
@@ -45,6 +45,8 @@ namespace PPL3_Banhangonline.Controllers
 
             var regularOrdersQuery = _context.Orders
                 .Include(o => o.Payment)
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Product)
                 .Where(o => o.CustomerID == customer.CustomerID)
                 .OrderByDescending(o => o.OrderDate)
                 .AsQueryable();
@@ -52,6 +54,40 @@ namespace PPL3_Banhangonline.Controllers
             if (!string.IsNullOrWhiteSpace(status))
             {
                 regularOrdersQuery = regularOrdersQuery.Where(o => o.Status == status);
+            }
+
+            if (fromDate.HasValue)
+            {
+                var from = fromDate.Value.Date;
+                regularOrdersQuery = regularOrdersQuery.Where(o => o.OrderDate.HasValue && o.OrderDate.Value.Date >= from);
+            }
+
+            if (toDate.HasValue)
+            {
+                var to = toDate.Value.Date;
+                regularOrdersQuery = regularOrdersQuery.Where(o => o.OrderDate.HasValue && o.OrderDate.Value.Date <= to);
+            }
+
+            if (minAmount.HasValue)
+            {
+                regularOrdersQuery = regularOrdersQuery.Where(o => o.TotalAmount.HasValue && o.TotalAmount.Value >= minAmount.Value);
+            }
+
+            if (maxAmount.HasValue)
+            {
+                regularOrdersQuery = regularOrdersQuery.Where(o => o.TotalAmount.HasValue && o.TotalAmount.Value <= maxAmount.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                var searchKeyword = keyword.Trim();
+                var isOrderId = int.TryParse(searchKeyword, out var orderId);
+
+                regularOrdersQuery = regularOrdersQuery.Where(o =>
+                    (isOrderId && o.OrderID == orderId) ||
+                    o.OrderDetails.Any(od => od.Product != null &&
+                                             od.Product.ProductName != null &&
+                                             od.Product.ProductName.Contains(searchKeyword)));
             }
 
             var rescueOrders = _context.RescueRegistrations
@@ -64,7 +100,12 @@ namespace PPL3_Banhangonline.Controllers
             {
                 RegularOrders = regularOrdersQuery.ToList(),
                 RescueRegistrations = rescueOrders,
-                CurrentStatus = status
+                CurrentStatus = status,
+                CurrentFromDate = fromDate,
+                CurrentToDate = toDate,
+                CurrentMinAmount = minAmount,
+                CurrentMaxAmount = maxAmount,
+                CurrentKeyword = keyword
             };
 
             return View(model);
